@@ -38,7 +38,6 @@ public:
             Rehash();
         }
     }
-    void Discard(int val) { Discard(val, table_[Hash(val)]); }
 };
 
 bool HashTable::Search(int val, std::list<int>& chain) {
