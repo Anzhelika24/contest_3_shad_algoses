@@ -1,6 +1,7 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <utility>
 #include <vector>
 
 namespace save {
@@ -17,6 +18,12 @@ struct Triangle {
         return (first_side == other.first_side) &&
                (second_side == other.second_side) &&
                (third_side == other.third_side);
+    }
+    Triangle& operator/(int coef) {
+        first_side /= coef;
+        second_side /= coef;
+        third_side /= coef;
+        return *this;
     }
 };
 
@@ -88,4 +95,16 @@ int GCD(const Triangle& triangle) {
     return std::gcd(triangle.first_side,
                     std::gcd(triangle.second_side, triangle.third_side));
 }
-Triangle CanonizeTriangle(Triangle triangle) {}
+Triangle& CanonizeTriangle(Triangle& triangle) {
+    if (triangle.first_side > triangle.second_side) {
+        std::swap(triangle.first_side, triangle.second_side);
+    }
+    if (triangle.second_side > triangle.third_side) {
+        std::swap(triangle.second_side, triangle.third_side);
+    }
+    if (triangle.first_side > triangle.second_side) {
+        std::swap(triangle.first_side, triangle.second_side);
+    }
+    int decimator = GCD(triangle);
+    return triangle / decimator;
+}
