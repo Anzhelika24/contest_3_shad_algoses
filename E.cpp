@@ -15,9 +15,9 @@ struct Triangle {
 class HashTable {
 private:
     int size_;
-    std::vector<std::list<int>> table_;
-    bool Search(int val, std::list<int>& chain);
-    void Insert(int val, std::list<int>& chain, bool rehash = false);
+    std::vector<std::vector<Triangle>> table_;
+    bool Search(int val, std::vector<Triangle>& chain);
+    void Insert(int val, std::vector<Triangle>& chain, bool rehash = false);
 
     long long a_, b_;
     int count_elements_ = 0;
@@ -27,7 +27,7 @@ private:
 public:
     HashTable()
         : size_(8),
-          table_(std::vector<std::list<int>>(8)),
+          table_(std::vector<std::vector<Triangle>>(8)),
           a_(rnd()),
           b_(rnd()) {}
     ~HashTable() {}
@@ -40,18 +40,19 @@ public:
     }
 };
 
-bool HashTable::Search(int val, std::list<int>& chain) {
-    for (int i : chain) {
-        if (i == val) {
+bool HashTable::Search(Triangle val, std::vector<Triangle>& chain) {
+    for (Triangle element : chain) {
+        if (element == val) {
             return true;
         }
     }
     return false;
 }
 
-void HashTable::Insert(int val, std::list<int>& chain, bool rehash) {
+void HashTable::Insert(Triangle val, std::vector<Triangle>& chain,
+                       bool rehash) {
     if (!Search(val, chain)) {
-        chain.push_front(val);
+        chain.push_back(val);
         if (!rehash) {
             count_elements_ += 1;
         }
@@ -59,7 +60,7 @@ void HashTable::Insert(int val, std::list<int>& chain, bool rehash) {
 }
 
 void HashTable::Rehash() {
-    std::vector<std::list<int>> new_table(2 * size_);
+    std::vector<std::vector<Triangle>> new_table(2 * size_);
     size_ *= 2;
     a_ = rnd();
     b_ = rnd();
@@ -70,3 +71,6 @@ void HashTable::Rehash() {
     }
     table_ = new_table;
 }
+
+Triangle GCD(Triangle& triangle) {}
+void CanonizeTriangle(Triangle& triangle) {}
