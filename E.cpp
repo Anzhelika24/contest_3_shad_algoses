@@ -12,9 +12,11 @@ struct Triangle {
     int first_side;
     int second_side;
     int third_side;
-    Triangle& operator=(Triangle other) {
-        std::swap(*this, other);
-        return *this;
+
+    bool operator==(const Triangle& other) const {
+        return (first_side == other.first_side) &&
+               (second_side == other.second_side) &&
+               (third_side == other.third_side);
     }
 };
 
@@ -75,8 +77,8 @@ void HashTable::Rehash() {
     a_ = rnd();
     b_ = rnd();
     for (int i = 0; i < size_ / 2; ++i) {
-        for (Triangle j : table_[i]) {
-            Insert(j, new_table[Hash(j)]);
+        for (const Triangle& canon_triangle : table_[i]) {
+            Insert(canon_triangle, new_table[Hash(canon_triangle)], true);
         }
     }
     std::swap(table_, new_table);
@@ -86,4 +88,4 @@ int GCD(const Triangle& triangle) {
     return std::gcd(triangle.first_side,
                     std::gcd(triangle.second_side, triangle.third_side));
 }
-void CanonizeTriangle(Triangle triangle) {}
+Triangle CanonizeTriangle(Triangle triangle) {}
