@@ -33,6 +33,7 @@ struct Triangle {
         third_side /= divisor;
         return *this;
     }
+    void Canonize();
 };
 
 class HashTable {
@@ -65,6 +66,7 @@ public:
             Rehash();
         }
     }
+    int GetCount() const { return count_elements_; }
 };
 
 int HashTable::Hash(const Triangle& triangle) const {
@@ -99,8 +101,10 @@ void HashTable::Insert(const Triangle& val, std::vector<Triangle>& chain,
 void HashTable::Rehash() {
     std::vector<std::vector<Triangle>> new_table(2 * size_);
     size_ *= 2;
-    a_ = rnd();
-    b_ = rnd();
+    a_ = distribution(rnd);
+    b_ = distribution(rnd);
+    c_ = distribution(rnd);
+    d_ = distribution(rnd);
     for (int i = 0; i < size_ / 2; ++i) {
         for (const Triangle& canon_triangle : table_[i]) {
             Insert(canon_triangle, new_table[Hash(canon_triangle)], true);
@@ -114,18 +118,33 @@ int GCD(const Triangle& triangle) {
                     std::gcd(triangle.second_side, triangle.third_side));
 }
 
-void CanonizeTriangle(Triangle* triangle) {
-    if (triangle->first_side > triangle->second_side) {
-        std::swap(triangle->first_side, triangle->second_side);
+void Triangle::Canonize() {
+    if (first_side > second_side) {
+        std::swap(first_side, second_side);
     }
-    if (triangle->second_side > triangle->third_side) {
-        std::swap(triangle->second_side, triangle->third_side);
+    if (second_side > third_side) {
+        std::swap(second_side, third_side);
     }
-    if (triangle->first_side > triangle->second_side) {
-        std::swap(triangle->first_side, triangle->second_side);
+    if (first_side > second_side) {
+        std::swap(first_side, second_side);
     }
 
-    *triangle /= GCD(*triangle);
+    *this /= GCD(*this);
 }
 
-int main() { return 0; }
+int main() {
+    int triangles_number;
+    std::cin >> triangles_number;
+    int size_one;
+    int size_two;
+    int size_three;
+    HashTable set;
+    for (int i = 0; i < triangles_number; ++i) {
+        std::cin >> size_one >> size_two >> size_three;
+        Triangle triangle = {size_one, size_two, size_three};
+        triangle.Canonize();
+        set.Insert(triangle);
+    }
+    std::cout << set.GetCount();
+    return 0;
+}
