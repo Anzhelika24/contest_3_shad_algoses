@@ -1,13 +1,21 @@
+#include <cstddef>
 #include <iostream>
 #include <numeric>
 #include <random>
 #include <utility>
 #include <vector>
 
-namespace save {
-std::mt19937 rnd(1000);
-}
-using save::rnd;
+constexpr size_t kStartSize = 8;
+namespace Save {
+constexpr int64_t kPrime = 2147483647;
+
+std::mt19937 rnd(std::random_device{}());
+
+std::uniform_int_distribution<int64_t> distribution(0, kPrime - 1);
+}  // namespace Save
+
+using Save::distribution;
+using Save::rnd;
 
 struct Triangle {
     int first_side;
@@ -35,18 +43,19 @@ private:
     void Insert(const Triangle& val, std::vector<Triangle>& chain,
                 bool rehash = false);
 
-    long long a_, b_;
+    int64_t a_, b_, c_, d_;
     int count_elements_ = 0;
     void Rehash();
-    int Hash(Triangle val) { return ((a_ * val) + b_) % size_; }
+    int Hash(const Triangle& triangle) const;
 
 public:
     HashTable()
-        : size_(8),
-          table_(std::vector<std::vector<Triangle>>(8)),
-          a_(rnd()),
-          b_(rnd()) {}
-    ~HashTable() {}
+        : size_(kStartSize),
+          table_(kStartSize),
+          a_(distribution(rnd)),
+          b_(distribution(rnd)),
+          c_(distribution(rnd)),
+          d_(distribution(rnd)) {}
     bool Search(const Triangle& val) const {
         return Search(val, table_[Hash(val)]);
     }
@@ -57,6 +66,15 @@ public:
         }
     }
 };
+
+int HashTable::Hash(const Triangle& triangle) const {
+    int64_t hash_code =
+        ((a_ * triangle.first_side) + (b_ * triangle.second_side) +
+         (c_ * triangle.third_side) + d_) %
+        Save::kPrime;
+
+    return static_cast<int>(hash_code % size_);
+}
 
 bool HashTable::Search(const Triangle& val,
                        const std::vector<Triangle>& chain) const {
@@ -109,3 +127,5 @@ void CanonizeTriangle(Triangle* triangle) {
 
     *triangle /= GCD(*triangle);
 }
+
+int main() { return 0; }
