@@ -1,6 +1,8 @@
 #include <iostream>
-#include <list>
+#include <numeric>
 #include <random>
+#include <vector>
+
 namespace save {
 std::mt19937 rnd(1000);
 }
@@ -10,19 +12,29 @@ struct Triangle {
     int first_side;
     int second_side;
     int third_side;
+    Triangle& operator=(Triangle other) {
+        std::swap(*this, other);
+        return *this;
+    }
+    bool operator==(const Triangle& other) const {
+        return (first_side == other.first_side) &&
+               (second_side == other.second_side) &&
+               (third_side == other.third_side);
+    }
 };
 
 class HashTable {
 private:
     int size_;
     std::vector<std::vector<Triangle>> table_;
-    bool Search(int val, std::vector<Triangle>& chain);
-    void Insert(int val, std::vector<Triangle>& chain, bool rehash = false);
+    bool Search(Triangle val, std::vector<Triangle>& chain);
+    void Insert(Triangle val, std::vector<Triangle>& chain,
+                bool rehash = false);
 
     long long a_, b_;
     int count_elements_ = 0;
     void Rehash();
-    int Hash(int val) { return ((a_ * val) + b_) % size_; }
+    int Hash(Triangle val) { return ((a_ * val) + b_) % size_; }
 
 public:
     HashTable()
@@ -31,8 +43,8 @@ public:
           a_(rnd()),
           b_(rnd()) {}
     ~HashTable() {}
-    bool Search(int val) { return Search(val, table_[Hash(val)]); }
-    void Insert(int val) {
+    bool Search(const Triangle& val) { return Search(val, table_[Hash(val)]); }
+    void Insert(Triangle val) {
         Insert(val, table_[Hash(val)]);
         if (count_elements_ > size_) {
             Rehash();
@@ -40,8 +52,8 @@ public:
     }
 };
 
-bool HashTable::Search(Triangle val, std::vector<Triangle>& chain) {
-    for (Triangle element : chain) {
+bool HashTable::Search(const Triangle& val, std::vector<Triangle>& chain) {
+    for (const Triangle& element : chain) {
         if (element == val) {
             return true;
         }
@@ -62,15 +74,11 @@ void HashTable::Insert(Triangle val, std::vector<Triangle>& chain,
 void HashTable::Rehash() {
     std::vector<std::vector<Triangle>> new_table(2 * size_);
     size_ *= 2;
-    a_ = rnd();
-    b_ = rnd();
-    for (int i = 0; i < size_ / 2; ++i) {
-        for (int j : table_[i]) {
-            Insert(j, new_table[Hash(j)], true);
-        }
-    }
-    table_ = new_table;
+    std::swap(table_, new_table);
 }
 
-Triangle GCD(Triangle& triangle) {}
+int GCD(const Triangle& triangle) {
+    return std::gcd(triangle.first_side,
+                    std::gcd(triangle.second_side, triangle.third_side));
+}
 void CanonizeTriangle(Triangle& triangle) {}
