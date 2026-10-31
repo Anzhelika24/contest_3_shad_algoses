@@ -16,19 +16,14 @@ struct Triangle {
         std::swap(*this, other);
         return *this;
     }
-    bool operator==(const Triangle& other) const {
-        return (first_side == other.first_side) &&
-               (second_side == other.second_side) &&
-               (third_side == other.third_side);
-    }
 };
 
 class HashTable {
 private:
     int size_;
     std::vector<std::vector<Triangle>> table_;
-    bool Search(Triangle val, std::vector<Triangle>& chain);
-    void Insert(Triangle val, std::vector<Triangle>& chain,
+    bool Search(const Triangle& val, const std::vector<Triangle>& chain) const;
+    void Insert(const Triangle& val, std::vector<Triangle>& chain,
                 bool rehash = false);
 
     long long a_, b_;
@@ -43,7 +38,9 @@ public:
           a_(rnd()),
           b_(rnd()) {}
     ~HashTable() {}
-    bool Search(const Triangle& val) { return Search(val, table_[Hash(val)]); }
+    bool Search(const Triangle& val) const {
+        return Search(val, table_[Hash(val)]);
+    }
     void Insert(Triangle val) {
         Insert(val, table_[Hash(val)]);
         if (count_elements_ > size_) {
@@ -52,7 +49,8 @@ public:
     }
 };
 
-bool HashTable::Search(const Triangle& val, std::vector<Triangle>& chain) {
+bool HashTable::Search(const Triangle& val,
+                       const std::vector<Triangle>& chain) const {
     for (const Triangle& element : chain) {
         if (element == val) {
             return true;
@@ -61,7 +59,7 @@ bool HashTable::Search(const Triangle& val, std::vector<Triangle>& chain) {
     return false;
 }
 
-void HashTable::Insert(Triangle val, std::vector<Triangle>& chain,
+void HashTable::Insert(const Triangle& val, std::vector<Triangle>& chain,
                        bool rehash) {
     if (!Search(val, chain)) {
         chain.push_back(val);
@@ -74,6 +72,13 @@ void HashTable::Insert(Triangle val, std::vector<Triangle>& chain,
 void HashTable::Rehash() {
     std::vector<std::vector<Triangle>> new_table(2 * size_);
     size_ *= 2;
+    a_ = rnd();
+    b_ = rnd();
+    for (int i = 0; i < size_ / 2; ++i) {
+        for (Triangle j : table_[i]) {
+            Insert(j, new_table[Hash(j)]);
+        }
+    }
     std::swap(table_, new_table);
 }
 
