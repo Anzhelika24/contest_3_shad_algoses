@@ -17,18 +17,19 @@ public:
     void Set(int left, int right, int root, int ind, int value);
     int Get(int x, int l, int elem, int lx, int rx);
 };
-void SegTree::Set(int lx, int rx, int root, int ind, int value) {
+void SegTree::Set(int lx, int rx, int root_index, int ind, int value) {
     if (rx - lx == 1) {
-        tree_[root] = value;
+        tree_[root_index] += value;
         return;
     }
     int middle = (lx + rx) / 2;
     if (ind < middle) {
-        Set(lx, middle, (2 * root) + 1, ind, value);
+        Set(lx, middle, (2 * root_index) + 1, ind, value);
     } else {
-        Set(middle, rx, (2 * root) + 2, ind, value);
+        Set(middle, rx, (2 * root_index) + 2, ind, value);
     }
-    tree_[root] = std::max(tree_[(2 * root) + 1], tree_[(2 * root) + 2]);
+    tree_[root_index] =
+        tree_[(2 * root_index) + 1] + tree_[(2 * root_index) + 2];
 }
 int SegTree::Get(int x, int l, int elem, int lx, int rx) {
     if ((tree_[x] < elem) || (rx - 1 < l)) {
