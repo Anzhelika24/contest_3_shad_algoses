@@ -1,11 +1,10 @@
-#include <cstddef>
 #include <iostream>
 #include <numeric>
 #include <random>
 #include <utility>
 #include <vector>
 
-constexpr size_t kStartSize = 8;
+constexpr int kStartSize = 8;
 namespace Save {
 constexpr int64_t kPrime = 2147483647;
 
@@ -135,13 +134,13 @@ void Triangle::Canonize() {
 int main() {
     int triangles_number;
     std::cin >> triangles_number;
-    int size_one;
-    int size_two;
-    int size_three;
+    int side_one;
+    int side_two;
+    int side_three;
     HashTable set;
     for (int i = 0; i < triangles_number; ++i) {
-        std::cin >> size_one >> size_two >> size_three;
-        Triangle triangle = {size_one, size_two, size_three};
+        std::cin >> side_one >> side_two >> side_three;
+        Triangle triangle = {side_one, side_two, side_three};
         triangle.Canonize();
         set.Insert(triangle);
     }
