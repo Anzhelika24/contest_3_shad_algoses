@@ -19,7 +19,7 @@ struct Triangle {
                (second_side == other.second_side) &&
                (third_side == other.third_side);
     }
-    Triangle& operator/(int coef) {
+    Triangle& operator/=(int coef) {
         first_side /= coef;
         second_side /= coef;
         third_side /= coef;
@@ -106,5 +106,5 @@ Triangle& CanonizeTriangle(Triangle& triangle) {
         std::swap(triangle.first_side, triangle.second_side);
     }
     int decimator = GCD(triangle);
-    return triangle / decimator;
+    return triangle /= decimator;
 }
