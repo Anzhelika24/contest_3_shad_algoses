@@ -86,4 +86,4 @@ int GCD(const Triangle& triangle) {
     return std::gcd(triangle.first_side,
                     std::gcd(triangle.second_side, triangle.third_side));
 }
-void CanonizeTriangle(Triangle& triangle) {}
+void CanonizeTriangle(Triangle triangle) {}
