@@ -19,10 +19,10 @@ struct Triangle {
                (second_side == other.second_side) &&
                (third_side == other.third_side);
     }
-    Triangle& operator/=(int coef) {
-        first_side /= coef;
-        second_side /= coef;
-        third_side /= coef;
+    Triangle& operator/=(int divisor) {
+        first_side /= divisor;
+        second_side /= divisor;
+        third_side /= divisor;
         return *this;
     }
 };
@@ -95,16 +95,17 @@ int GCD(const Triangle& triangle) {
     return std::gcd(triangle.first_side,
                     std::gcd(triangle.second_side, triangle.third_side));
 }
-Triangle& CanonizeTriangle(Triangle& triangle) {
-    if (triangle.first_side > triangle.second_side) {
-        std::swap(triangle.first_side, triangle.second_side);
+
+void CanonizeTriangle(Triangle* triangle) {
+    if (triangle->first_side > triangle->second_side) {
+        std::swap(triangle->first_side, triangle->second_side);
     }
-    if (triangle.second_side > triangle.third_side) {
-        std::swap(triangle.second_side, triangle.third_side);
+    if (triangle->second_side > triangle->third_side) {
+        std::swap(triangle->second_side, triangle->third_side);
     }
-    if (triangle.first_side > triangle.second_side) {
-        std::swap(triangle.first_side, triangle.second_side);
+    if (triangle->first_side > triangle->second_side) {
+        std::swap(triangle->first_side, triangle->second_side);
     }
-    int decimator = GCD(triangle);
-    return triangle /= decimator;
+
+    *triangle /= GCD(*triangle);
 }
