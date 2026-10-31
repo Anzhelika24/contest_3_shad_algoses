@@ -56,9 +56,7 @@ public:
           b_(distribution(rnd)),
           c_(distribution(rnd)),
           d_(distribution(rnd)) {}
-    bool Search(const Triangle& val) const {
-        return Search(val, table_[Hash(val)]);
-    }
+    bool Search(const Triangle& val) { return Search(val, table_[Hash(val)]); }
     void Insert(Triangle val) {
         Insert(val, table_[Hash(val)]);
         if (count_elements_ > size_) {
@@ -76,15 +74,9 @@ int HashTable::Hash(const Triangle& triangle) const {
 
     return static_cast<int>(hash_code % size_);
 }
-
 bool HashTable::Search(const Triangle& val,
-                       const std::vector<Triangle>& chain) const {
-    for (const Triangle& element : chain) {
-        if (element == val) {
-            return true;
-        }
-    }
-    return false;
+                       const std::vector<Triangle>& chain) {
+    return std::find(chain.begin(), chain.end(), val) != chain.end();
 }
 
 void HashTable::Insert(const Triangle& val, std::vector<Triangle>& chain,
