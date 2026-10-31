@@ -39,7 +39,7 @@ class HashTable {
 private:
     int size_;
     std::vector<std::vector<Triangle>> table_;
-    bool Search(const Triangle& val, const std::vector<Triangle>& chain) const;
+    static bool Search(const Triangle& val, const std::vector<Triangle>& chain);
     void Insert(const Triangle& val, std::vector<Triangle>& chain,
                 bool rehash = false);
 
