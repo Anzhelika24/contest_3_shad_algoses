@@ -36,13 +36,13 @@ int SegTree::GetCompressedIndex(int root_index, int lx, int rx, int k_stat) {
     if (tree_[root_index] < k_stat) {
         return -1;
     }
-    if (lx - rx == 1) {
+    if (rx - lx == 1) {
         return lx;
     }
     int left_child = (2 * root_index) + 1;
     int middle = (lx + rx) / 2;
     if (tree_[left_child] >= k_stat) {
-        GetCompressedIndex(left_child, lx, middle, k_stat);
+        return GetCompressedIndex(left_child, lx, middle, k_stat);
     }
     return GetCompressedIndex(left_child + 1, middle, rx,
                               k_stat - tree_[left_child]);
