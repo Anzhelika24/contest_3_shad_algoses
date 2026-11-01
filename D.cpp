@@ -79,14 +79,17 @@ std::vector<int> GetSortedUniqueCoordinates(std::vector<int> array) {
     return array;
 }
 
-std::vector<int>& GetCompressedArray(const std::vector<int>& coordinates,
-                                     const std::vector<int>& array,
-                                     std::vector<int>& compressed) {
-    for (int i = 0; i < compressed.size(); ++i) {
-        compressed[i] =
+std::vector<int> GetCompressedArray(const std::vector<int>& coordinates,
+                                    const std::vector<int>& array) {
+    std::vector<int> compressed(array.size());
+
+    for (size_t i = 0; i < array.size(); ++i) {
+        compressed[i] = static_cast<int>(
             std::lower_bound(coordinates.begin(), coordinates.end(), array[i]) -
-            coordinates.begin();
+            coordinates.begin());
     }
+
+    return compressed;
 }
 
 int main() {
@@ -101,10 +104,8 @@ int main() {
     for (int i = 0; i < number_elements; ++i) {
         std::cin >> array[i];
     }
-    std::vector<int> coordinates(number_elements);
-    coordinates = GetSortedUniqueCoordinates(array);
-    std::vector<int> compressed(number_elements);
-    compressed = GetCompressedArray(coordinates, array, compressed);
+    std::vector<int> coordinates = GetSortedUniqueCoordinates(array);
+    std::vector<int> compressed = GetCompressedArray(coordinates, array);
 
     return 0;
 }
