@@ -15,8 +15,8 @@ public:
         }
         tree_.resize((2 * size_) - 1, 0);
     }
-    void Set(int left, int right, int root, int ind, int value);
-    int Get(int x, int l, int elem, int lx, int rx);
+    void Set(int lx, int rx, int root_index, int ind, int value);
+    int GetCompressedIndex(int root_index, int lx, int rx, int k_stat);
 };
 void SegTree::Set(int lx, int rx, int root_index, int ind, int value) {
     if (rx - lx == 1) {
@@ -32,23 +32,20 @@ void SegTree::Set(int lx, int rx, int root_index, int ind, int value) {
     tree_[root_index] =
         tree_[(2 * root_index) + 1] + tree_[(2 * root_index) + 2];
 }
-int SegTree::Get(int x, int l, int elem, int lx, int rx) {
-    if ((tree_[x] < elem) || (rx - 1 < l)) {
+int SegTree::GetCompressedIndex(int root_index, int lx, int rx, int k_stat) {
+    if (tree_[root_index] < k_stat) {
         return -1;
     }
-    if (x * 2 + 1 >= size_ * 2 - 1) {
-        if (tree_[x] >= elem) {
-            return lx + 1;
-        }
-        return -1;
+    if (lx - rx == 1) {
+        return lx;
     }
-    int k;
-    int m = (lx + rx) / 2;
-    k = Get(2 * x + 1, l, elem, lx, m);
-    if (k != -1) {
-        return k;
+    int left_child = (2 * root_index) + 1;
+    int middle = (lx + rx) / 2;
+    if (tree_[left_child] >= k_stat) {
+        GetCompressedIndex(left_child, lx, middle, k_stat);
     }
-    return Get(2 * x + 2, l, elem, m, rx);
+    return GetCompressedIndex(left_child + 1, middle, rx,
+                              k_stat - tree_[left_child]);
 }
 
 // int main() {
