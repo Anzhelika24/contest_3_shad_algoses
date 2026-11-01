@@ -112,6 +112,17 @@ int main() {
     for (int i = 0; i < number_operations; ++i) {
         std::cin >> command;
         if (command == 'R') {
+            right++;
+            tree_of_frequency.Set(0, tree_of_frequency.Size(), 0,
+                                  compressed[right], 1);
+            std::cout << array[tree_of_frequency.GetCompressedIndex(
+                0, left, right - 1, k_stat)];
+        } else if (command == 'L') {
+            tree_of_frequency.Set(0, tree_of_frequency.Size(), 0,
+                                  compressed[left], -1);
+            ++left;
+            std::cout << array[tree_of_frequency.GetCompressedIndex(
+                0, left, right - 1, k_stat)];
         }
     }
     return 0;
