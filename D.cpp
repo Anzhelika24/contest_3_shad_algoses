@@ -82,7 +82,7 @@ int main() {
     std::vector<int> coordinates = GetSortedUniqueCoordinates(array);
     std::vector<int> compressed = GetCompressedArray(coordinates, array);
 
-    SegTree tree_of_frequency(number_elements);
+    SegTree tree_of_frequency(static_cast<int>(coordinates.size()));
     int left = 0;
     int right = 0;
     char command;
