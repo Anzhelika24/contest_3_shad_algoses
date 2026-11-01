@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -72,6 +73,22 @@ int SegTree::Get(int x, int l, int elem, int lx, int rx) {
 //     }
 //   }
 // }
+std::vector<int> GetSortedUniqueCoordinates(std::vector<int> array) {
+    std::sort(array.begin(), array.end());
+    array.erase(std::unique(array.begin(), array.end()), array.end());
+    return array;
+}
+
+std::vector<int>& GetCompressedArray(const std::vector<int>& coordinates,
+                                     const std::vector<int>& array,
+                                     std::vector<int>& compressed) {
+    for (int i = 0; i < compressed.size(); ++i) {
+        compressed[i] =
+            std::lower_bound(coordinates.begin(), coordinates.end(), array[i]) -
+            coordinates.begin();
+    }
+}
+
 int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
@@ -84,6 +101,10 @@ int main() {
     for (int i = 0; i < number_elements; ++i) {
         std::cin >> array[i];
     }
+    std::vector<int> coordinates(number_elements);
+    coordinates = GetSortedUniqueCoordinates(array);
+    std::vector<int> compressed(number_elements);
+    compressed = GetCompressedArray(coordinates, array, compressed);
 
     return 0;
 }
