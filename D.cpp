@@ -104,5 +104,15 @@ int main() {
     std::vector<int> coordinates = GetSortedUniqueCoordinates(array);
     std::vector<int> compressed = GetCompressedArray(coordinates, array);
 
+    SegTree tree_of_frequency(number_elements);
+    int left = 0;
+    int right = 0;
+    char command;
+    tree_of_frequency.Set(0, tree_of_frequency.Size(), 0, compressed[0], 1);
+    for (int i = 0; i < number_operations; ++i) {
+        std::cin >> command;
+        if (command == 'R') {
+        }
+    }
     return 0;
 }
