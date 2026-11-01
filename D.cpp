@@ -48,28 +48,6 @@ int SegTree::GetCompressedIndex(int root_index, int lx, int rx, int k_stat) {
                               k_stat - tree_[left_child]);
 }
 
-// int main() {
-//   int n, m;
-//   std::cin >> n >> m;
-//   std::vector<int> a(n);
-//   for (int i = 0; i < n; ++i) {
-//     std::cin >> a[i];
-//   }
-//   SegTree t(n);
-//   for (int i = 0; i < n; ++i) {
-//     t.Set(0, t.Size(), 0, i, a[i]);
-//   }
-//   int k, pos, elem;
-//   for (int i = 0; i < m; ++i) {
-//     std::cin >> k >> pos >> elem;
-//     if (k == 0) {
-//       t.Set(0, t.Size(), 0, pos - 1, elem);
-//     }
-//     if (k == 1) {
-//       std::cout << t.Get(0, pos - 1, elem, 0, t.Size()) << std::endl;
-//     }
-//   }
-// }
 std::vector<int> GetSortedUniqueCoordinates(std::vector<int> array) {
     std::sort(array.begin(), array.end());
     array.erase(std::unique(array.begin(), array.end()), array.end());
@@ -115,14 +93,18 @@ int main() {
             right++;
             tree_of_frequency.Set(0, tree_of_frequency.Size(), 0,
                                   compressed[right], 1);
-            std::cout << array[tree_of_frequency.GetCompressedIndex(
-                0, left, right - 1, k_stat)];
+
         } else if (command == 'L') {
             tree_of_frequency.Set(0, tree_of_frequency.Size(), 0,
                                   compressed[left], -1);
             ++left;
-            std::cout << array[tree_of_frequency.GetCompressedIndex(
-                0, left, right - 1, k_stat)];
+        }
+        int compressed_index = tree_of_frequency.GetCompressedIndex(
+            0, 0, tree_of_frequency.Size(), k_stat);
+        if (compressed_index == -1) {
+            std::cout << -1 << '\n';
+        } else {
+            std::cout << coordinates[compressed_index] << '\n';
         }
     }
     return 0;
