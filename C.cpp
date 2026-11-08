@@ -11,7 +11,6 @@ struct HeapElement {
     int start;
     int size;
     int id;
-    static bool IsBetter(const HeapElement& first, const HeapElement& second);
 };
 
 class Heap {
@@ -23,7 +22,7 @@ private:
 
 public:
     void Insert(const HeapElement& element);
-    HeapElement ExtractMin();
+    HeapElement ExtractMax();
     bool Empty() const { return heap_.empty(); }
 };
 
@@ -53,7 +52,7 @@ void Heap::SiftDown(int index) {
             smallest_child = right_child;
         }
 
-        if (heap_[index].value <= heap_[smallest_child].value) {
+        if (!IsBetter(heap_[smallest_child], heap_[index])) {
             break;
         }
         std::swap(heap_[index], heap_[smallest_child]);
@@ -66,20 +65,19 @@ void Heap::Insert(const HeapElement& element) {
     SiftUp(static_cast<int>(heap_.size()) - 1);
 }
 
-HeapElement Heap::ExtractMin() {
-    HeapElement extracted_min = heap_[0];
+HeapElement Heap::ExtractMax() {
+    HeapElement extracted_max = heap_[0];
     std::swap(heap_[0], heap_[heap_.size() - 1]);
     heap_.pop_back();
     SiftDown(0);
-    return extracted_min;
+    return extracted_max;
 }
 
-bool HeapElement::IsBetter(const HeapElement& first,
-                           const HeapElement& second) {
+bool Heap::IsBetter(const HeapElement& first, const HeapElement& second) {
     if (first.size != second.size) {
         return first.size > second.size;
     }
-    return first.start > second.start;
+    return first.start < second.start;
 }
 
 int main() {
