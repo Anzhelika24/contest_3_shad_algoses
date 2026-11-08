@@ -30,7 +30,7 @@ public:
 void Heap::SiftUp(int index) {
     while (index > 0) {
         int parent = (index - 1) / 2;
-        if (heap_[index].value >= heap_[parent].value) {
+        if (!IsBetter(heap_[index], heap_[parent])) {
             break;
         }
         std::swap(heap_[index], heap_[parent]);
@@ -49,7 +49,7 @@ void Heap::SiftDown(int index) {
         smallest_child = left_child;
         int right_child = (2 * index) + 2;
         if (right_child < static_cast<int>(heap_.size()) &&
-            heap_[right_child].value < heap_[left_child].value) {
+            IsBetter(heap_[right_child], heap_[left_child])) {
             smallest_child = right_child;
         }
 
