@@ -109,6 +109,8 @@ int main() {
     std::vector<std::list<MemoryBlock>::iterator> block_iterator_by_id;
     block_iterator_by_id.push_back(blocks.begin());
 
+    int new_id = static_cast<int>(is_actual.size());
+
     int command;
     for (int i = 0; i < number_requests; ++i) {
         std::cin >> command;
