@@ -1,7 +1,8 @@
 #include <iostream>
 struct Block {
     int start;
-    size_t size;
+    int size;
+    bool is_free;
 };
 int main() {
     std::ios::sync_with_stdio(false);
