@@ -128,6 +128,7 @@ int main() {
             auto block_it = block_iterator_by_id[selected_block.id];
             if (block_it->size == command) {
                 block_it->is_free = false;
+                is_actual[block_it->id] = false;
             } else {
                 block_it->size -= command;
                 block_it->start += command;
