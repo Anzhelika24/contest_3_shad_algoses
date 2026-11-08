@@ -109,5 +109,13 @@ int main() {
     std::vector<std::list<MemoryBlock>::iterator> actual_block_by_id;
     actual_block_by_id.push_back(blocks.begin());
 
-    return 0;
-}
+    int command;
+    for (int i = 0; i < number_requests; ++i) {
+        std::cin >> command;
+        if (command > 0) {
+            if (!heap.Empty()) {
+                while (actual_block_by_id[heap.Top().id]) }
+        }
+
+        return 0;
+    }
