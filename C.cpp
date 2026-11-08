@@ -189,27 +189,27 @@ void MemoryManager::Release(int request_index) {
         }
         block_it->is_free = true;
     }
+}
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
 
-    int main() {
-        std::ios::sync_with_stdio(false);
-        std::cin.tie(nullptr);
+    int memory_size;
+    int number_requests;
+    std::cin >> memory_size >> number_requests;
 
-        int memory_size;
-        int number_requests;
-        std::cin >> memory_size >> number_requests;
+    MemoryManager manager(memory_size, number_requests);
 
-        MemoryManager manager(memory_size, number_requests);
+    for (int i = 0; i < number_requests; ++i) {
+        int command;
+        std::cin >> command;
 
-        for (int i = 0; i < number_requests; ++i) {
-            int command;
-            std::cin >> command;
-
-            if (command > 0) {
-                std::cout << manager.Allocate(command, i) << '\n';
-            } else {
-                manager.Release(-command - 1);
-            }
+        if (command > 0) {
+            std::cout << manager.Allocate(command, i) << '\n';
+        } else {
+            manager.Release(-command - 1);
         }
-
-        return 0;
     }
+
+    return 0;
+}
