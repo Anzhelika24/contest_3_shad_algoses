@@ -96,13 +96,11 @@ public:
 
 private:
     using BlockIterator = std::list<MemoryBlock>::iterator;
-
     std::list<MemoryBlock> blocks_;
     Heap heap_;
     std::vector<bool> is_actual_;
     std::vector<BlockIterator> block_iterator_by_id_;
     std::vector<BlockIterator> allocation_by_request_;
-
     void RemoveInactiveTop();
     void RegisterFreeBlock(BlockIterator block_it);
 };
@@ -111,7 +109,6 @@ MemoryManager::MemoryManager(int memory_size, int number_requests)
     : allocation_by_request_(number_requests, blocks_.end()) {
     blocks_.push_back({1, memory_size, true, 0});
     heap_.Insert({1, memory_size, 0});
-
     is_actual_.push_back(true);
     block_iterator_by_id_.push_back(blocks_.begin());
 }
@@ -124,11 +121,9 @@ void MemoryManager::RemoveInactiveTop() {
 
 void MemoryManager::RegisterFreeBlock(BlockIterator block_it) {
     int new_id = static_cast<int>(is_actual_.size());
-
     block_it->id = new_id;
     is_actual_.push_back(true);
     block_iterator_by_id_.push_back(block_it);
-
     heap_.Insert({block_it->start, block_it->size, new_id});
 }
 
@@ -198,9 +193,7 @@ int main() {
     int memory_size;
     int number_requests;
     std::cin >> memory_size >> number_requests;
-
     MemoryManager manager(memory_size, number_requests);
-
     for (int i = 0; i < number_requests; ++i) {
         int command;
         std::cin >> command;
