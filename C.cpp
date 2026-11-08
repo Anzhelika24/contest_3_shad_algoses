@@ -89,10 +89,10 @@ const HeapElement& Heap::Top() const { return heap_[0]; }
 int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
-    std::cout << "start " << '\n';
     int memory_size;
     int number_requests;
     std::cin >> memory_size >> number_requests;
+
     std::list<MemoryBlock> blocks;
     blocks.push_back(MemoryBlock{
         1,
@@ -115,16 +115,20 @@ int main() {
     for (int i = 0; i < number_requests; ++i) {
         std::cin >> command;
         if (command > 0) {
-            if (!heap.Empty()) {
-                while (!is_actual[heap.Top().id]) {
-                    heap.ExtractMax();
-                }
+            while (!heap.Empty() && !is_actual[heap.Top().id]) {
+                heap.ExtractMax();
             }
+
             if (heap.Empty() || heap.Top().size < command) {
                 std::cout << -1 << '\n';
                 continue;
             }
-        }
 
-        return 0;
+            auto best_block = heap.ExtractMax();
+            auto cur_it = block_iterator_by_id[best_block.id].;
+            blocks
+        }
     }
+
+    return 0;
+}
