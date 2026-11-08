@@ -88,7 +88,7 @@ const HeapElement& Heap::Top() const { return heap_[0]; }
 int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
-
+    std::cout << "start " << '\n';
     int memory_size;
     int number_requests;
     std::cin >> memory_size >> number_requests;
@@ -108,8 +108,7 @@ int main() {
 
     while (!heap.Empty()) {
         auto extractedmax = heap.ExtractMax();
-        std::cout << extractedmax.start << " " << extractedmax.size << ""
-                  << extractedmax.id << "\n";
+        std::cout << extractedmax.start << " " << extractedmax.size << "\n";
     }
     return 0;
 }
