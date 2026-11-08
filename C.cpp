@@ -7,6 +7,7 @@ struct MemoryBlock {
     int start;
     int size;
     bool is_free;
+    int id;
 };
 
 struct HeapElement {
@@ -97,18 +98,16 @@ int main() {
         1,
         memory_size,
         true,
+        0,
     });
 
     Heap heap;
+    heap.Insert({1, memory_size, 0});
 
-    heap.Insert({10, 5, 0});
-    heap.Insert({2, 8, 1});
-    heap.Insert({20, 8, 2});
-    std::cout << "start " << '\n';
+    std::vector<bool> is_active(1, true);
 
-    while (!heap.Empty()) {
-        auto extractedmax = heap.ExtractMax();
-        std::cout << extractedmax.start << " " << extractedmax.size << "\n";
-    }
+    std::vector<std::list<MemoryBlock>::iterator> actual_block_by_id;
+    actual_block_by_id.push_back(blocks.begin());
+
     return 0;
 }
