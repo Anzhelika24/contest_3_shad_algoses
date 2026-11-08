@@ -187,8 +187,8 @@ void MemoryManager::Release(int request_index) {
             blocks_.erase(right_it);
         }
     }
-    RegisterFreeBlock(block_it);
     block_it->is_free = true;
+    RegisterFreeBlock(block_it);
 }
 int main() {
     std::ios::sync_with_stdio(false);
