@@ -1,5 +1,7 @@
 #include <iostream>
 #include <list>
+#include <utility>
+#include <vector>
 
 struct MemoryBlock {
     int start;
@@ -24,6 +26,7 @@ public:
     void Insert(const HeapElement& element);
     HeapElement ExtractMax();
     bool Empty() const { return heap_.empty(); }
+    const HeapElement& Top() const;
 };
 
 void Heap::SiftUp(int index) {
@@ -38,25 +41,25 @@ void Heap::SiftUp(int index) {
 }
 
 void Heap::SiftDown(int index) {
-    int smallest_child;
+    int best_child;
     while (true) {
         int left_child = (2 * index) + 1;
         if (left_child >= static_cast<int>(heap_.size())) {
             break;
         }
 
-        smallest_child = left_child;
+        best_child = left_child;
         int right_child = (2 * index) + 2;
         if (right_child < static_cast<int>(heap_.size()) &&
             IsBetter(heap_[right_child], heap_[left_child])) {
-            smallest_child = right_child;
+            best_child = right_child;
         }
 
-        if (!IsBetter(heap_[smallest_child], heap_[index])) {
+        if (!IsBetter(heap_[best_child], heap_[index])) {
             break;
         }
-        std::swap(heap_[index], heap_[smallest_child]);
-        index = smallest_child;
+        std::swap(heap_[index], heap_[best_child]);
+        index = best_child;
     }
 }
 
@@ -79,6 +82,8 @@ bool Heap::IsBetter(const HeapElement& first, const HeapElement& second) {
     }
     return first.start < second.start;
 }
+
+const HeapElement& Heap::Top() const { return heap_[0]; }
 
 int main() {
     std::ios::sync_with_stdio(false);
