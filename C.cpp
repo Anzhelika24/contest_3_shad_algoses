@@ -129,9 +129,9 @@ int main() {
 
             auto selected_block = heap.ExtractMax();
             auto block_it = block_iterator_by_id[selected_block.id];
+            is_actual[selected_block.id] = false;
             if (block_it->size == command) {
                 block_it->is_free = false;
-                is_actual[block_it->id] = false;
                 allocation_by_request[i] = block_it;
             } else {
                 block_it->size -= command;
@@ -144,7 +144,15 @@ int main() {
                                                 -1,
                                             });
                 allocation_by_request[i] = occupied_block_before_free_it;
+
+                int new_id = static_cast<int>(is_actual.size());
+                block_it->id = new_id;
+                is_actual.push_back(true);
+                block_iterator_by_id.push_back(block_it);
+
+                heap.Insert({block_it->start, block_it->size, new_id});
             }
+            std::cout << selected_block.start << '\n';
         }
     }
 
