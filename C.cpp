@@ -86,73 +86,97 @@ bool Heap::IsBetter(const HeapElement& first, const HeapElement& second) {
 
 const HeapElement& Heap::Top() const { return heap_[0]; }
 
+class MemoryManager {
+public:
+    MemoryManager(int memory_size, int number_requests);
+
+    int Allocate(int size, int request_index);
+    void Release(int request_index);
+
+private:
+    using BlockIterator = std::list<MemoryBlock>::iterator;
+
+    std::list<MemoryBlock> blocks_;
+    Heap heap_;
+    std::vector<bool> is_actual_;
+    std::vector<BlockIterator> block_iterator_by_id_;
+    std::vector<BlockIterator> allocation_by_request_;
+
+    void RemoveInactiveTop();
+    void RegisterFreeBlock(BlockIterator block_it);
+};
+
+MemoryManager::MemoryManager(int memory_size, int number_requests)
+    : allocation_by_request_(number_requests, blocks_.end()) {
+    blocks_.push_back({1, memory_size, true, 0});
+    heap_.Insert({1, memory_size, 0});
+
+    is_actual_.push_back(true);
+    block_iterator_by_id_.push_back(blocks_.begin());
+}
+
+void MemoryManager::RemoveInactiveTop() {
+    while (!heap_.Empty() && !is_actual_[heap_.Top().id]) {
+        heap_.ExtractMax();
+    }
+}
+
+void MemoryManager::RegisterFreeBlock(BlockIterator block_it) {
+    int new_id = static_cast<int>(is_actual_.size());
+
+    block_it->id = new_id;
+    is_actual_.push_back(true);
+    block_iterator_by_id_.push_back(block_it);
+
+    heap_.Insert({block_it->start, block_it->size, new_id});
+}
+
+int MemoryManager::Allocate(int size, int request_index) {
+    RemoveInactiveTop();
+
+    if (heap_.Empty() || heap_.Top().size < size) {
+        return -1;
+    }
+
+    HeapElement selected_block = heap_.ExtractMax();
+    BlockIterator block_it = block_iterator_by_id_[selected_block.id];
+    is_actual_[selected_block.id] = false;
+
+    if (block_it->size == size) {
+        block_it->is_free = false;
+        allocation_by_request_[request_index] = block_it;
+    } else {
+        BlockIterator occupied_it =
+            blocks_.insert(block_it, {block_it->start, size, false, -1});
+
+        block_it->size -= size;
+        block_it->start += size;
+
+        allocation_by_request_[request_index] = occupied_it;
+        RegisterFreeBlock(block_it);
+    }
+
+    return selected_block.start;
+}
+
 int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
     int memory_size;
     int number_requests;
     std::cin >> memory_size >> number_requests;
 
-    std::list<MemoryBlock> blocks;
-    blocks.push_back(MemoryBlock{
-        1,
-        memory_size,
-        true,
-        0,
-    });
+    MemoryManager manager(memory_size, number_requests);
 
-    Heap heap;
-    heap.Insert({1, memory_size, 0});
-
-    std::vector<bool> is_actual(1, true);
-
-    std::vector<std::list<MemoryBlock>::iterator> block_iterator_by_id;
-    block_iterator_by_id.push_back(blocks.begin());
-
-    std::vector<std::list<MemoryBlock>::iterator> allocation_by_request(
-        number_requests, blocks.end());
-
-    int new_id = static_cast<int>(is_actual.size());
-
-    int command;
     for (int i = 0; i < number_requests; ++i) {
+        int command;
         std::cin >> command;
+
         if (command > 0) {
-            while (!heap.Empty() && !is_actual[heap.Top().id]) {
-                heap.ExtractMax();
-            }
-
-            if (heap.Empty() || heap.Top().size < command) {
-                std::cout << -1 << '\n';
-                continue;
-            }
-
-            auto selected_block = heap.ExtractMax();
-            auto block_it = block_iterator_by_id[selected_block.id];
-            is_actual[selected_block.id] = false;
-            if (block_it->size == command) {
-                block_it->is_free = false;
-                allocation_by_request[i] = block_it;
-            } else {
-                block_it->size -= command;
-                block_it->start += command;
-                auto occupied_block_before_free_it =
-                    blocks.insert(block_it, MemoryBlock{
-                                                block_it->start - command,
-                                                command,
-                                                false,
-                                                -1,
-                                            });
-                allocation_by_request[i] = occupied_block_before_free_it;
-
-                int new_id = static_cast<int>(is_actual.size());
-                block_it->id = new_id;
-                is_actual.push_back(true);
-                block_iterator_by_id.push_back(block_it);
-
-                heap.Insert({block_it->start, block_it->size, new_id});
-            }
-            std::cout << selected_block.start << '\n';
+            std::cout << manager.Allocate(command, i) << '\n';
+        } else {
+            manager.Release(-command - 1);
         }
     }
 
