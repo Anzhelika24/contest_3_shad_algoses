@@ -136,7 +136,7 @@ int main() {
             } else {
                 block_it->size -= command;
                 block_it->start += command;
-                auto new_it =
+                auto occupied_it =
                     blocks.insert(block_it, MemoryBlock{
                                                 block_it->start - command,
                                                 command,
