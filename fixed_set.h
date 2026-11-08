@@ -8,8 +8,6 @@
 
 class FixedSet {
 public:
-    FixedSet() = default;
-
     void Initialize(const std::vector<int>& numbers);
     bool Contains(int number) const;
 
