@@ -104,6 +104,8 @@ int main() {
     heap.Insert({10, 5, 0});
     heap.Insert({2, 8, 1});
     heap.Insert({20, 8, 2});
+    std::cout << "start " << '\n';
+
     while (!heap.Empty()) {
         auto extractedmax = heap.ExtractMax();
         std::cout << extractedmax.start << " " << extractedmax.size << ""
