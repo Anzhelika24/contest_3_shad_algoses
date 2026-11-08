@@ -15,8 +15,8 @@ int main() {
     std::cin >> memory_size;
     std::list<Block> blocks;
     blocks.push_back(Block{
-        0,
-        memory_size - 1,
+        1,
+        memory_size,
         true,
     });
     return 0;
