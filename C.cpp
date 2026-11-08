@@ -159,26 +159,57 @@ int MemoryManager::Allocate(int size, int request_index) {
     return selected_block.start;
 }
 
-int main() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+void MemoryManager::Release(int request_index) {
+    BlockIterator block_it = allocation_by_request_[request_index];
 
-    int memory_size;
-    int number_requests;
-    std::cin >> memory_size >> number_requests;
+    if (block_it == blocks_.end()) {
+        return;
+    }
+    if (block_it != blocks_.begin()) {
+        BlockIterator left_it = std::prev(block_it);
 
-    MemoryManager manager(memory_size, number_requests);
+        if (left_it->is_free) {
+            is_actual_[left_it->id] = false;
 
-    for (int i = 0; i < number_requests; ++i) {
-        int command;
-        std::cin >> command;
+            left_it->size += block_it->size;
+            blocks_.erase(block_it);
 
-        if (command > 0) {
-            std::cout << manager.Allocate(command, i) << '\n';
-        } else {
-            manager.Release(-command - 1);
+            block_it = left_it;
         }
+
+        if (block_it != std::prev(blocks_.end())) {
+            BlockIterator right_it = std::next(block_it);
+
+            if (right_it->is_free) {
+                is_actual_[right_it->id] = false;
+
+                block_it->size += right_it->size;
+                blocks_.erase(right_it);
+            }
+        }
+        block_it->is_free = true;
     }
 
-    return 0;
-}
+    int main() {
+        std::ios::sync_with_stdio(false);
+        std::cin.tie(nullptr);
+
+        int memory_size;
+        int number_requests;
+        std::cin >> memory_size >> number_requests;
+
+        MemoryManager manager(memory_size, number_requests);
+
+        for (int i = 0; i < number_requests; ++i) {
+            int command;
+            std::cin >> command;
+
+            if (command > 0) {
+                std::cout << manager.Allocate(command, i) << '\n';
+            } else {
+                manager.Release(-command - 1);
+            }
+        }
+
+        return 0;
+    }
