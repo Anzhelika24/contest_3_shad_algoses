@@ -136,13 +136,14 @@ int main() {
             } else {
                 block_it->size -= command;
                 block_it->start += command;
-                auto occupied_it =
+                auto occupied_block_before_free_it =
                     blocks.insert(block_it, MemoryBlock{
                                                 block_it->start - command,
                                                 command,
                                                 false,
                                                 -1,
                                             });
+                allocation_by_request[i] = occupied_block_before_free_it;
             }
         }
     }
