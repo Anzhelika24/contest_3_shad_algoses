@@ -104,17 +104,24 @@ int main() {
     Heap heap;
     heap.Insert({1, memory_size, 0});
 
-    std::vector<bool> is_active(1, true);
+    std::vector<bool> is_actual(1, true);
 
-    std::vector<std::list<MemoryBlock>::iterator> actual_block_by_id;
-    actual_block_by_id.push_back(blocks.begin());
+    std::vector<std::list<MemoryBlock>::iterator> block_iterator_by_id;
+    block_iterator_by_id.push_back(blocks.begin());
 
     int command;
     for (int i = 0; i < number_requests; ++i) {
         std::cin >> command;
         if (command > 0) {
             if (!heap.Empty()) {
-                while (actual_block_by_id[heap.Top().id]) }
+                while (!is_actual[heap.Top().id]) {
+                    heap.ExtractMax();
+                }
+            }
+            if (heap.Empty() || heap.Top().size < command) {
+                std::cout << -1 << '\n';
+                continue;
+            }
         }
 
         return 0;
