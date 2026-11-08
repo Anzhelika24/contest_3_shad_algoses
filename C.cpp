@@ -124,9 +124,11 @@ int main() {
                 continue;
             }
 
-            auto best_block = heap.ExtractMax();
-            auto cur_it = block_iterator_by_id[best_block.id].;
-            blocks
+            auto selected_block = heap.ExtractMax();
+            auto block_it = block_iterator_by_id[selected_block.id];
+            if (block_it->size == command) {
+                block_it->is_free = false;
+            }
         }
     }
 
