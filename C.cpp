@@ -176,19 +176,19 @@ void MemoryManager::Release(int request_index) {
 
             block_it = left_it;
         }
-
-        if (block_it != std::prev(blocks_.end())) {
-            BlockIterator right_it = std::next(block_it);
-
-            if (right_it->is_free) {
-                is_actual_[right_it->id] = false;
-
-                block_it->size += right_it->size;
-                blocks_.erase(right_it);
-            }
-        }
-        block_it->is_free = true;
     }
+    if (block_it != std::prev(blocks_.end())) {
+        BlockIterator right_it = std::next(block_it);
+
+        if (right_it->is_free) {
+            is_actual_[right_it->id] = false;
+
+            block_it->size += right_it->size;
+            blocks_.erase(right_it);
+        }
+    }
+    RegisterFreeBlock(block_it);
+    block_it->is_free = true;
 }
 int main() {
     std::ios::sync_with_stdio(false);
