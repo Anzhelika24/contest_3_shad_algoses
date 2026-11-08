@@ -98,5 +98,16 @@ int main() {
         memory_size,
         true,
     });
+
+    Heap heap;
+
+    heap.Insert({10, 5, 0});
+    heap.Insert({2, 8, 1});
+    heap.Insert({20, 8, 2});
+    while (!heap.Empty()) {
+        auto extractedmax = heap.ExtractMax();
+        std::cout << extractedmax.start << " " << extractedmax.size << ""
+                  << extractedmax.id << "\n";
+    }
     return 0;
 }
