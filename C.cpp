@@ -109,6 +109,9 @@ int main() {
     std::vector<std::list<MemoryBlock>::iterator> block_iterator_by_id;
     block_iterator_by_id.push_back(blocks.begin());
 
+    std::vector<std::list<MemoryBlock>::iterator> allocation_by_request(
+        number_requests, blocks.end());
+
     int new_id = static_cast<int>(is_actual.size());
 
     int command;
@@ -129,9 +132,17 @@ int main() {
             if (block_it->size == command) {
                 block_it->is_free = false;
                 is_actual[block_it->id] = false;
+                allocation_by_request[i] = block_it;
             } else {
                 block_it->size -= command;
                 block_it->start += command;
+                auto new_it =
+                    blocks.insert(block_it, MemoryBlock{
+                                                block_it->start - command,
+                                                command,
+                                                false,
+                                                -1,
+                                            });
             }
         }
     }
