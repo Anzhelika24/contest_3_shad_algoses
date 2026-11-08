@@ -1,5 +1,4 @@
-#ifndef FIXED_SET_H_
-#define FIXED_SET_H_
+#pragma once
 
 #include <algorithm>
 #include <cstdint>
@@ -149,5 +148,3 @@ inline bool FixedSet::Contains(int number) const {
         slots_[bucket.offset + bucket.hash.Index(number, bucket.length)];
     return slot.used && slot.value == number;
 }
-
-#endif  // FIXED_SET_H_
